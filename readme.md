@@ -49,10 +49,7 @@ To register this package in Lumen, you'll also need to add the following line to
 This package does not intend to support database migrations and it should not be used for this use case.
 
 ## Credits
-- [Harry Gulliford](https://github.com/andersonav)
-- [Jacques van Zuydam](https://github.com/jacquestvanzuydam/firebird-connector)
-- [Simonov Denis](https://github.com/sim1984/firebird-connector)
-- [All Contributors](https://github.com/andersonav/firebird-connector/graphs/contributors)
+- [Anderson Alves](https://github.com/andersonav)
 
 ## License
 Licensed under the [MIT](https://choosealicense.com/licenses/mit/) license.
