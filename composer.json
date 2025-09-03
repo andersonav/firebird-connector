@@ -1,0 +1,40 @@
+{
+  "name": "andersonav/firebird-connector",
+  "description": "Firebird database driver for the Laravel Framework",
+  "license": "MIT",
+  "require": {
+    "php": "^8.2|^8.3|^8.4",
+    "illuminate/support": "^12.0",
+    "illuminate/container": "^12.0",
+    "illuminate/database": "^12.0",
+    "illuminate/events": "^12.0"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.4",
+    "phpunit/phpunit": "^11.0",
+    "orchestra/testbench": "^10.0",
+    "fakerphp/faker": "^1.15"
+  },
+  "archive": {
+    "exclude": [
+      "/tests"
+    ]
+  },
+  "autoload": {
+    "psr-4": {
+      "AndersonAv\\Firebird\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "AndersonAv\\Firebird\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "AndersonAv\\Firebird\\FirebirdServiceProvider"
+      ]
+    }
+  }
+}
