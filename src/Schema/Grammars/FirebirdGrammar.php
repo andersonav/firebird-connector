@@ -217,7 +217,7 @@ class FirebirdGrammar extends Grammar
      *
      * @return string
      */
-    public function compileTables($schema)
+    public function compileTables($schema = null)
     {
         return 'select trim(trailing from rdb$relation_name) as "name" '
             . 'from rdb$relations '
