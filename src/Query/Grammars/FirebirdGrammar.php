@@ -73,14 +73,14 @@ class FirebirdGrammar extends Grammar
         // prefix the last segment as the table name then wrap each segment alone
         // and eventually join them both back together using the dot connector.
         if (str_contains($table, '.')) {
-            $table = substr_replace($table, '.'.$this->tablePrefix, strrpos($table, '.'), 1);
+            $table = substr_replace($table, '.'.$this->connection->getTablePrefix(), strrpos($table, '.'), 1);
 
             return collect(explode('.', $table))
                 ->map($this->wrapValue(...))
                 ->implode('.');
         }
 
-        return $this->wrapValue($this->tablePrefix.$table);
+        return $this->wrapValue($this->connection->getTablePrefix().$table);
     }
 
 	/**
@@ -142,13 +142,14 @@ class FirebirdGrammar extends Grammar
      * Wrap a table that has an alias.
      *
      * @param  string  $value
+     * @param  string|null  $prefix
      * @return string
      */
-    protected function wrapAliasedTable($value)
+    protected function wrapAliasedTable($value, $prefix = null)
     {
         $segments = preg_split('/\s+as\s+/i', $value);
 
-        return $this->wrapTable($segments[0]).' as '.$this->wrapValue($this->tablePrefix.$segments[1]);
+        return $this->wrapTable($segments[0]).' as '.$this->wrapValue($this->connection->getTablePrefix().$segments[1]);
     }
 
     /**

@@ -53,7 +53,7 @@ class FirebirdGrammar extends Grammar
      * @param  mixed  $table
      * @return string
      */
-    public function wrapTable($table)
+    public function wrapTable($table, $prefix = null)
     {
         return $this->wrapTableFB(
             $table instanceof Blueprint ? $table->getTable() : $table
@@ -84,14 +84,14 @@ class FirebirdGrammar extends Grammar
         // prefix the last segment as the table name then wrap each segment alone
         // and eventually join them both back together using the dot connector.
         if (str_contains($table, '.')) {
-            $table = substr_replace($table, '.'.$this->tablePrefix, strrpos($table, '.'), 1);
+            $table = substr_replace($table, '.'.$this->connection->getTablePrefix(), strrpos($table, '.'), 1);
 
             return collect(explode('.', $table))
                 ->map($this->wrapValue(...))
                 ->implode('.');
         }
 
-        return $this->wrapValue($this->tablePrefix.$table);
+        return $this->wrapValue($this->connection->getTablePrefix().$table);
     }
 
 	/**
@@ -155,11 +155,11 @@ class FirebirdGrammar extends Grammar
      * @param  string  $value
      * @return string
      */
-    protected function wrapAliasedTable($value)
+    protected function wrapAliasedTable($value, $prefix = null)
     {
         $segments = preg_split('/\s+as\s+/i', $value);
 
-        return $this->wrapTable($segments[0]).' as '.$this->wrapValue($this->tablePrefix.$segments[1]);
+        return $this->wrapTable($segments[0], $prefix).' as '.$this->wrapValue($this->connection->getTablePrefix().$segments[1]);
     }
 
     /**
@@ -233,7 +233,12 @@ class FirebirdGrammar extends Grammar
      */
     public function compileTableExists($schema, $table)
     {
-        return 'select rdb$relation_name from rdb$relations where rdb$relation_name = ?';
+        
+        $sql = 'select rdb$relation_name from rdb$relations where rdb$relation_name = \'' . $table .'\';';
+        
+        //echo $sql;
+
+        return $sql;
     }
 
     /**
@@ -301,6 +306,10 @@ class FirebirdGrammar extends Grammar
     public function compileDropIfExists(Blueprint $blueprint, Fluent $command)
     {
         $table = str_replace('"', "'", $this->wrapTable($blueprint));
+
+        echo $table;
+        echo $table;
+        echo $table;
 
         return sprintf(
             "execute block as begin if (exists(%s)) then execute statement '%s'; end",
@@ -514,17 +523,6 @@ class FirebirdGrammar extends Grammar
     protected function typeLongText(Fluent $column)
     {
         return 'BLOB SUB_TYPE TEXT';
-    }
-
-    /**
-     * Create the column definition for an integer type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    protected function typeInteger(Fluent $column)
-    {
-        return 'INTEGER';
     }
 
     /**
