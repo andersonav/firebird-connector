@@ -80,6 +80,7 @@ class Builder extends QueryBuilder
         // are only keyed by the column itself. We'll strip the table out here.
         $column = $this->stripTableForPluck($column);
         $key    = $this->stripTableForPluck($key);
+        $key    = $key !== null ? strtoupper($key) : null;
 
         $column = strtoupper($column);
 

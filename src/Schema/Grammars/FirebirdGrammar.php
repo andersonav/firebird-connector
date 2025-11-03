@@ -233,9 +233,9 @@ class FirebirdGrammar extends Grammar
      */
     public function compileTableExists($schema, $table)
     {
-        
-        $sql = 'select rdb$relation_name from rdb$relations where rdb$relation_name = \'' . $table .'\';';
-        
+
+        $sql = 'select rdb$relation_name from rdb$relations where rdb$relation_name = \'' . strtoupper($table) .'\';';
+
         //echo $sql;
 
         return $sql;
@@ -306,10 +306,6 @@ class FirebirdGrammar extends Grammar
     public function compileDropIfExists(Blueprint $blueprint, Fluent $command)
     {
         $table = str_replace('"', "'", $this->wrapTable($blueprint));
-
-        echo $table;
-        echo $table;
-        echo $table;
 
         return sprintf(
             "execute block as begin if (exists(%s)) then execute statement '%s'; end",
