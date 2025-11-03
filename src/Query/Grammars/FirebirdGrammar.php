@@ -42,7 +42,7 @@ class FirebirdGrammar extends Grammar
      * @param  mixed  $table
      * @return string
      */
-    public function wrapTable($table)
+    public function wrapTable($table, $prefix = null)
     {
         return $this->wrapTableFB(
             $table instanceof Blueprint ? $table->getTable() : $table
