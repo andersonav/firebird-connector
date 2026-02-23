@@ -15,6 +15,48 @@ class FirebirdConnection extends DatabaseConnection
 {
 
     /**
+     * Bind values to their parameters in the given statement.
+     *
+     * @param  \PDOStatement  $statement
+     * @param  array  $bindings
+     * @return void
+     */
+    public function bindValues($statement, $bindings)
+    {
+        foreach ($bindings as $key => $value) {
+            $param = is_string($key) ? $key : $key + 1;
+
+            if ($value === null) {
+                $statement->bindValue($param, null, PDO::PARAM_NULL);
+                continue;
+            }
+
+            if (is_resource($value)) {
+                $statement->bindValue($param, $value, PDO::PARAM_LOB);
+                continue;
+            }
+
+            $statement->bindValue($param, $this->fbStringify($value), PDO::PARAM_STR);
+        }
+    }
+
+    private function fbStringify($value): string
+    {
+        if (is_bool($value)) {
+            return $value ? '1' : '0';
+        }
+
+        // evita notação científica (1E-5) e mantém decimal com ponto
+        if (is_float($value)) {
+            $s = sprintf('%.15F', $value);
+            $s = rtrim(rtrim($s, '0'), '.');
+            return $s === '' ? '0' : $s;
+        }
+
+        return (string) $value;
+    }
+    
+    /**
      * Get the server version for the connection.
      *
      * @return string
