@@ -40,17 +40,9 @@ class FirebirdConnection extends DatabaseConnection
         }
     }
 
-    private function fbStringify($value): string
-    {
-        if (is_bool($value)) {
-            return $value ? '1' : '0';
-        }
-
-        // evita notação científica (1E-5) e mantém decimal com ponto
+    private function fbStringify($value): string {
         if (is_float($value)) {
-            $s = sprintf('%.15F', $value);
-            $s = rtrim(rtrim($s, '0'), '.');
-            return $s === '' ? '0' : $s;
+            return number_format($value, 2, '.', '');
         }
 
         return (string) $value;
