@@ -42,7 +42,7 @@ class FirebirdConnection extends DatabaseConnection
 
     private function fbStringify($value): string {
         if (is_float($value)) {
-            return number_format($value, 2, '.', '');
+            return number_format($value, 8, '.', '');
         }
 
         return (string) $value;
